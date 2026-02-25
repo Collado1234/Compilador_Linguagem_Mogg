@@ -7,9 +7,11 @@
 ```python -m venv venv```
 
 3. Ative o ambiente virtual:
-Windows:
+
+    Windows:
 ```venv\Scripts\activate```
-Linux/macOS:
+
+    Linux/macOS:
 ```source venv/bin/activate```
 
 4. Instale as dependências:
