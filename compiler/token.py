@@ -1,9 +1,7 @@
 class Token:
-    def __init__(self, type, value, line=None, column=None):
+    def __init__(self, type, value):
         self.type = type
         self.value = value
-        self.line = line
-        self.column = column
 
     def __repr__(self):
         return f"Token({self.type}, {self.value})"
