@@ -1,7 +1,19 @@
-class Token:
-    def __init__(self, type, value):
-        self.type = type
-        self.value = value
+from dataclasses import dataclass
 
-    def __repr__(self):
-        return f"Token({self.type}, {self.value})"
+from compiler.token_type import TokenType
+
+
+@dataclass(frozen=True)
+class Token:
+    """Representa um token produzido pelo analisador léxico."""
+
+    type: TokenType
+    value: str
+    line: int
+    column: int
+
+    def __repr__(self) -> str:
+        return (
+            f"Token(type={self.type.name}, value='{self.value}', "
+            f"line={self.line}, column={self.column})"
+        )

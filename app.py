@@ -1,25 +1,33 @@
 import streamlit as st
 
+from compiler.errors import LexerError
 from compiler.lexer import Lexer
 
-st.markdown("<h1 style='text-align: center;'>Compilador</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>Compilador - Analisador Léxico</h1>", unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns([2, 1, 1])
+sample = "(10 + 5.5) / 2 - .25"
+text_area = st.text_area("Expressão matemática:", value=sample, height=180)
 
-with col1:
-    text_area = st.text_area("Expressão matemática:", width=300, height=400)
-
-run_button = st.button("Compilar", icon=":material/check:")
+run_button = st.button("Analisar", icon=":material/check:")
 
 if run_button:
-    lexer = Lexer(text_area)
-    tokens = lexer.generate_tokens()
-    
-    with col2:
-        lexema = st.subheader("Lexema")
-        for token in tokens:
-            st.write(token.value)
-    with col3:
-        token = st.write("Token")
-        for token in tokens:
-            st.write(token)
+    try:
+        lexer = Lexer(text_area)
+        tokens = lexer.generate_tokens()
+
+        st.success("Análise léxica concluída com sucesso.")
+        st.dataframe(
+            [
+                {
+                    "Token": token.type.name,
+                    "Descrição": token.type.value,
+                    "Lexema": token.value,
+                    "Linha": token.line,
+                    "Coluna": token.column,
+                }
+                for token in tokens
+            ],
+            width="stretch",
+        )
+    except LexerError as error:
+        st.error(str(error))
