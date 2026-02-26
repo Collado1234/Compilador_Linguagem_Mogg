@@ -1,11 +1,14 @@
 from enum import Enum
 
 class TokenType(Enum):
-    iNum = "INTEGER NUMBER"
-    rNum = "REAL NUMBER"
-    lParen = "LEFT PARENTHESIS"
-    rParen = "RIGHT PARENTHESIS"
-    opAdd = "ADDITION"
-    opSub = "SUBTRACTION"
-    opMul = "MULTIPLICATION"
-    opDiv = "DIVISION"
+    """Tipos de tokens aceitos pelo analisador léxico."""
+    
+    INTEGER = "INTEGER NUMBER"
+    REAL = "REAL NUMBER"
+    LEFT_PAREN = "LEFT PARENTHESIS"
+    RIGHT_PAREN = "RIGHT PARENTHESIS"
+    OP_ADD = "ADDITION"
+    OP_SUB = "SUBTRACTION"
+    OP_MUL = "MULTIPLICATION"
+    OP_DIV = "DIVISION"
+    EOF = "END OF INPUT"
