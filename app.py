@@ -8,7 +8,10 @@ st.markdown("<h1 style='text-align: center;'>Compilador - Analisador Léxico</h1
 sample = "(10 + 5.5) / 2 - .25"
 text_area = st.text_area("Expressão matemática:", value=sample, height=180)
 
-run_button = st.button("Analisar", icon=":material/check:")
+col1, col2, col3, col4, col5 = st.columns([1,1,1,1,1])
+
+with col3:
+    run_button = st.button("Analisar", icon=":material/check:")
 
 if run_button:
     try:
