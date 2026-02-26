@@ -1,51 +1,100 @@
-from utils import format_error
-from compiler.token import Token;
-from compiler.token_type import TokenType;
+from compiler.errors import LexerError
+from compiler.token import Token
+from compiler.token_type import TokenType
 
 class Lexer:
-    def __init__(self, text):
-        self.text = text
+    "Analisador semântico para expressões aritméticas"
+
+    SINGLE_CHAR_TOKENS = {
+            "+": TokenType.OP_ADD,
+        "-": TokenType.OP_SUB,
+        "*": TokenType.OP_MUL,
+        "/": TokenType.OP_DIV,
+        "(": TokenType.LEFT_PAREN,
+        ")": TokenType.RIGHT_PAREN,
+    }
+
+    def __init__(self, text: str):
+        self.text = text or ""
         self.position = 0
-
+        self.line = 1
+        self.column = 1
+    
     def generate_tokens(self):
-        tokens = []
-        while self.position < len(self.text):
-            current_char = self.text[self.position]
+        tokens: list[tokens] = []
 
-            if current_char.isdigit():
+        while self._current_char is not None:
+            current_char = self._current_char
+
+            if current_char.isspace():
+                self._advance()
+                continue
+
+            if current_char.isdigit() or current_char == ".":
                 tokens.append(self._generate_number())
+                continue
 
-            elif current_char == '+':
-                tokens.append(Token(TokenType.opAdd, '+'))
-                self.position += 1
+            token_type = self.SINGLE_CHAR_TOKENS.get(current_char)
+            if token_type:
+                token = Token(token_type, current_char, self.line, self.column)
+                tokens.append(token)
+                self._advance()
+                continue
 
-            elif current_char == '-':
-                tokens.append(Token(TokenType.opSub, '-'))
-                self.position += 1
+            raise LexerError(f"Caractere inválido: '{current_char}'", self.line, self.column)
 
-            elif current_char == '*':
-                tokens.append(Token(TokenType.opMul, '*'))
-                self.position += 1
+        tokens.append(Token(TokenType.EOF, "", self.line, self.column))
+        return tokens
 
-            elif current_char == '/':
-                tokens.append(Token(TokenType.opDiv, '/'))
-                self.position += 1
+    @property
+    def _current_char(self) -> str | None:
+        if self.position >= len(self.text):
+            return None
+        return self.text[self.position]
 
-            elif current_char == '(':
-                tokens.append(Token(TokenType.lParen, '('))
-                self.position += 1
+    def _advance(self) -> None:
+        if self._current_char == "\n":
+            self.line += 1
+            self.column = 1
+        else:
+            self.column += 1
+        self.position += 1
 
-            elif current_char == ')':
-                tokens.append(Token(TokenType.rParen, ')'))
-                self.position += 1
+    def _generate_number(self) -> Token:
+        start_line = self.line
+        start_column = self.column
+        number = []
+        has_decimal_point = False
+        has_digit = False
 
-            else:
-                raise Exception(format_error("Caractere inválido", line, column))
-            
-    def _generate_number(self):
-        number_str = ""
-        while self.position < len(self.text) and self.text[self.position].isdigit():
-            number_str += self.text[self.position]
-            self.position += 1
+        while self._current_char is not None:
+            current_char = self._current_char
 
-        return Token(TokenType.iNum, number_str)
+            if current_char == ".":
+                if has_decimal_point:
+                    raise LexerError("Número real inválido (múltiplos pontos)", self.line, self.column)
+                has_decimal_point = True
+                number.append(current_char)
+                self._advance()
+                continue
+
+            if not current_char.isdigit():
+                break
+
+            has_digit = True
+            number.append(current_char)
+            self._advance()
+
+        lexeme = "".join(number)
+
+        if not has_digit:
+            raise LexerError("Numero inválido", start_line, start_column)
+        
+        if lexeme.startswith("."):
+            lexeme = f"0{lexeme}"
+
+        if lexeme.endswith("."):
+            lexeme = f"{lexeme}0"
+        
+        token_type = TokenType.REAL if has_decimal_point else TokenType.INTEGER
+        return Token(token_type, lexeme, start_line, start_column)
