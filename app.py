@@ -34,22 +34,25 @@ with col3:
     run_button = st.button("Analisar", icon=":material/check:")
 
 if run_button:
-    lexer = Lexer(text_area)
-    tokens = lexer.generate_tokens()
+    try:
+        lexer = Lexer(text_area)
+        tokens = lexer.generate_tokens()
 
-    df_pandas = pd.DataFrame(
-        [
-            {
-                "Token": token.type.name,
-                "Descrição": token.type.value,
-                "Lexema": token.value,
-                "Linha": token.line,
-                "Coluna": token.column,
-            }
-            for token in tokens 
-        ]
-    )
-    st.session_state['df'] = df_pandas
+        df_pandas = pd.DataFrame(
+            [
+                {
+                    "Token": token.type.name,
+                    "Descrição": token.type.value,
+                    "Lexema": token.value,
+                    "Linha": token.line,
+                    "Coluna": token.column,
+                }
+                for token in tokens 
+            ]
+        )
+        st.session_state['df'] = df_pandas
+    except LexerError as error:
+        st.error(str(error))
 
 if st.session_state['df'].empty == False:
     st.success("Análise léxica concluída com sucesso.")
