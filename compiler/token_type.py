@@ -12,3 +12,4 @@ class TokenType(Enum):
     OP_MUL = "MULTIPLICATION"
     OP_DIV = "DIVISION"
     EOF = "END OF INPUT"
+    INVALID = "INVALID TOKEN"

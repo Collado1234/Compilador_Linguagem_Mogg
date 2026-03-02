@@ -52,11 +52,15 @@ if run_button:
             ]
         )
         st.session_state['df'] = df_pandas
+        st.session_state['has_errors'] = lexer.has_errors # Podemos usar isso para mostrar uma mensagem de aviso se houver erros léxicos, mas ainda assim mostrar os tokens encontrados.
     except LexerError as error:
         st.error(str(error))
 
 if st.session_state['df'].empty == False:
-    st.success("Análise léxica concluída com sucesso.")
+    if st.session_state.get('has_errors', False):
+        st.warning("A análise léxica foi concluída, mas foram encontrados caracteres inválidos. Verifique os tokens listados para mais detalhes.")
+    else:
+        st.success("Análise léxica concluída com sucesso.")
     df_streamlit = st.dataframe(
         st.session_state['df']
     )

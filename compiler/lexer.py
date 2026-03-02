@@ -22,6 +22,7 @@ class Lexer:
     
     def generate_tokens(self):
         tokens: list[tokens] = []
+        self.has_errors = False
 
         while self._current_char is not None:
             current_char = self._current_char
@@ -30,18 +31,24 @@ class Lexer:
                 self._advance()
                 continue
 
-            if current_char.isdigit() or current_char == ".":
+            if current_char.isdigit() or current_char == ".": #Permite que um n real comece com ponto ou termine com ponto
                 tokens.append(self._generate_number())
                 continue
 
-            token_type = self.SINGLE_CHAR_TOKENS.get(current_char)
+            token_type = self.SINGLE_CHAR_TOKENS.get(current_char) 
             if token_type:
                 token = Token(token_type, current_char, self.line, self.column, self.column) # O token de operador tem início e fim na mesma coluna
                 tokens.append(token)
                 self._advance()
                 continue
 
-            raise LexerError(f"Caractere inválido: '{current_char}'", self.line, self.column)
+            #Como queremos que ele n pare vamos criar um token mesmo assim, mas marcando como inválido
+            token = Token(TokenType.INVALID, current_char, self.line, self.column, self.column)
+            tokens.append(token)
+            self.has_errors = True
+            self._advance()
+
+            # raise LexerError(f"Caractere inválido: '{current_char}'", self.line, self.column)
 
         tokens.append(Token(TokenType.EOF, "", self.line, self.column))
         return tokens
