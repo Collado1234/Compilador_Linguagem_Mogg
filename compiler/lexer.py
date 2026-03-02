@@ -36,7 +36,7 @@ class Lexer:
 
             token_type = self.SINGLE_CHAR_TOKENS.get(current_char)
             if token_type:
-                token = Token(token_type, current_char, self.line, self.column)
+                token = Token(token_type, current_char, self.line, self.column, self.column) # O token de operador tem início e fim na mesma coluna
                 tokens.append(token)
                 self._advance()
                 continue
@@ -97,4 +97,5 @@ class Lexer:
             lexeme = f"{lexeme}0"
         
         token_type = TokenType.REAL if has_decimal_point else TokenType.INTEGER
-        return Token(token_type, lexeme, start_line, start_column)
+        end_column = self.column - 1 # O token termina na coluna anterior à posição atual
+        return Token(token_type, lexeme, start_line, start_column, end_column)

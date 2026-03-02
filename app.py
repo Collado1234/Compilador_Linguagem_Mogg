@@ -45,7 +45,8 @@ if run_button:
                     "Descrição": token.type.value,
                     "Lexema": token.value,
                     "Linha": token.line,
-                    "Coluna": token.column,
+                    "Coluna Inicial": token.column,
+                    "Coluna Final": token.end_column,
                 }
                 for token in tokens 
             ]
