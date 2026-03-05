@@ -47,6 +47,7 @@ class Lexer:
         self.line = 1
         self.column = 1
         self.has_errors = False
+        self.errors = []  # Lista para registrar erros
     
     def generate_tokens(self):
         tokens: list[Token] = []
@@ -132,14 +133,18 @@ class Lexer:
 
             #Como queremos que ele n pare vamos criar um token mesmo assim, mas marcando como inválido
             self.has_errors = True
+            self.errors.append({
+                "tipo": "Caractere inválido",
+                "linha": self.line,
+                "coluna": self.column,
+                "mensagem": f"Caractere '{current_char}' não reconhecido"
+            })
             token = Token(TokenType.INVALID, current_char, self.line, self.column, self.column)
             tokens.append(token)
             self._advance()
 
-            # raise LexerError(f"Caractere inválido: '{current_char}'", self.line, self.column)
-
         tokens.append(Token(TokenType.EOF, "", self.line, self.column))
-        return tokens
+        return tokens, self.errors  # Retorna tokens e lista de erros
 
     @property
     def _current_char(self) -> str | None:
@@ -217,9 +222,15 @@ class Lexer:
                 return
             self._advance()
 
-        # Se chegamos ao fim do texto sem encontrar o fechamento do comentário, é um erro
+        # Registra o erro sem levantar exceção
         self.has_errors = True
-        raise LexerError("Comentário de bloco não fechado", start_line, start_column)
+        self.errors.append({
+            "tipo": "Comentário não fechado",
+            "linha": start_line,
+            "coluna": start_column,
+            "mensagem": "Comentário de bloco não fechado"
+        })
+        # Remove o raise LexerError(...)
 
     def _skip_line_comment(self) -> None: #Pula comentário de linha
         while self._current_char is not None and self._current_char != "\n":
