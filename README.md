@@ -9,7 +9,7 @@
 3. Ative o ambiente virtual:
 
     Windows:
-```venv\Scripts\activate```
+```source venv\Scripts\activate```
 
     Linux/macOS:
 ```source venv/bin/activate```
