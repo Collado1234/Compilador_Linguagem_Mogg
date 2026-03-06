@@ -38,23 +38,23 @@ with tab1:
         run_button = st.button("Analisar", key=1, icon=":material/check:")
 
     # Tokens válidos para expressões matemáticas
-    TOKENS_VALIDOS_EXPRESSAO = {
+    VALID_TOKENS_EXPRESSION = {
         "INTEGER", "REAL", "OP_ADD", "OP_SUB", "OP_MUL", "OP_DIV",
         "LEFT_PAREN", "RIGHT_PAREN", "EOF"
     }
     
-    OPERADORES = {"OP_ADD", "OP_SUB", "OP_MUL", "OP_DIV"}
-    OPERANDOS = {"INTEGER", "REAL"}
+    OPERATORS = {"OP_ADD", "OP_SUB", "OP_MUL", "OP_DIV"}
+    OPERANDS = {"INTEGER", "REAL"}
 
     if run_button:
         try:
             lexer = Lexer(text_area)
-            tokens, erros = lexer.generate_tokens()
+            tokens, errors = lexer.generate_tokens()
 
             # Validar tokens para expressões matemáticas
             for token in tokens:
-                if token.type.name not in TOKENS_VALIDOS_EXPRESSAO:
-                    erros.append({
+                if token.type.name not in VALID_TOKENS_EXPRESSION:
+                    errors.append({
                         "tipo": "Token inválido para expressão",
                         "linha": token.line,
                         "coluna": token.column,
@@ -65,16 +65,16 @@ with tab1:
             # Validação sintática simples
             tokens_sem_eof = [t for t in tokens if t.type.name != "EOF"]
             for i, token in enumerate(tokens_sem_eof):
-                tipo_atual = token.type.name
+                current_type = token.type.name
                 
                 # Verifica operadores consecutivos (exceto - unário após outro operador)
                 if i > 0:
-                    tipo_anterior = tokens_sem_eof[i-1].type.name
+                    previous_type = tokens_sem_eof[i-1].type.name
                     
                     # Dois operadores consecutivos (exceto - após operador para negativo)
-                    if tipo_atual in OPERADORES and tipo_anterior in OPERADORES:
-                        if not (tipo_atual == "OP_SUB" and tipo_anterior in OPERADORES):
-                            erros.append({
+                    if current_type in OPERATORS and previous_type in OPERATORS:
+                        if not (current_type == "OP_SUB" and previous_type in OPERATORS):
+                            errors.append({
                                 "tipo": "Erro sintático",
                                 "linha": token.line,
                                 "coluna": token.column,
@@ -83,8 +83,8 @@ with tab1:
                             lexer.has_errors = True
                     
                     # Dois operandos consecutivos sem operador
-                    if tipo_atual in OPERANDOS and tipo_anterior in OPERANDOS:
-                        erros.append({
+                    if current_type in OPERANDS and previous_type in OPERANDS:
+                        errors.append({
                             "tipo": "Erro sintático",
                             "linha": token.line,
                             "coluna": token.column,
@@ -93,8 +93,8 @@ with tab1:
                         lexer.has_errors = True
                 
                 # Expressão começa com operador binário (* ou /)
-                if i == 0 and tipo_atual in {"OP_MUL", "OP_DIV"}:
-                    erros.append({
+                if i == 0 and current_type in {"OP_MUL", "OP_DIV"}:
+                    errors.append({
                         "tipo": "Erro sintático",
                         "linha": token.line,
                         "coluna": token.column,
@@ -103,9 +103,9 @@ with tab1:
                     lexer.has_errors = True
             
             # Expressão termina com operador
-            if tokens_sem_eof and tokens_sem_eof[-1].type.name in OPERADORES:
+            if tokens_sem_eof and tokens_sem_eof[-1].type.name in OPERATORS:
                 ultimo = tokens_sem_eof[-1]
-                erros.append({
+                errors.append({
                     "tipo": "Erro sintático",
                     "linha": ultimo.line,
                     "coluna": ultimo.column,
@@ -113,9 +113,9 @@ with tab1:
                 })
                 lexer.has_errors = True
 
-            if erros:
+            if errors:
                 st.error("Erros encontrados:")
-                st.dataframe(pd.DataFrame(erros))
+                st.dataframe(pd.DataFrame(errors))
 
             df = pd.DataFrame(
                 [
@@ -184,10 +184,10 @@ end."""
         try:
             # Análise Léxica
             lexer = Lexer(text_area2)
-            tokens, erros_lexicos = lexer.generate_tokens()
+            tokens, errors_lexic = lexer.generate_tokens()
 
             # Mostrar tokens
-            df_pandas2 = pd.DataFrame(
+            df2 = pd.DataFrame(
                 [
                     {
                         "Token": token.type.name,
@@ -200,11 +200,11 @@ end."""
                     for token in tokens 
                 ]
             )
-            st.session_state['df2'] = df_pandas2
+            st.session_state['df2'] = df2
 
-            if erros_lexicos:
+            if errors_lexic:
                 st.error("Erros léxicos encontrados:")
-                st.dataframe(pd.DataFrame(erros_lexicos))
+                st.dataframe(pd.DataFrame(errors_lexic))
                 st.session_state['has_errors2'] = True
                 st.session_state['parser_errors'] = []
             else:
@@ -230,4 +230,4 @@ end."""
         st.dataframe(st.session_state['df2'])
 
         csv2 = st.session_state['df2'].to_csv(index=False).encode("utf-8")
-        st.download_button(label="Baixar CSV", data=csv2, file_name="data_sintatico.csv", icon=":material/download:", disabled=False, key="download2")
+        st.download_button(label="Baixar CSV", data=csv2, file_name="data_syntactic.csv", icon=":material/download:", disabled=False, key="download2")
