@@ -14,25 +14,23 @@ with tab1:
     if 'df' not in st.session_state:
         st.session_state['df'] = pd.DataFrame()
 
-    if 'upload' not in st.session_state:
-        st.session_state['upload'] = None
+    if 'text_area' not in st.session_state:
+        st.session_state['text_area'] = None
 
     st.markdown("<h2 style='text-align: center;'>Analisador Léxico</h2>", unsafe_allow_html=True)
 
-    file_uploader = st.file_uploader(key=0, label="Carregar expressão matemática", type=['txt'], max_upload_size=1, accept_multiple_files=False, width="stretch")
-    file_text = None
+    file_uploader = st.file_uploader(key="file_uploader", label="Carregar expressão matemática", type=['txt'], max_upload_size=1, accept_multiple_files=False, width="stretch")
 
     if file_uploader:
-        st.session_state['upload'] = file_uploader
         stringio = StringIO(file_uploader.getvalue().decode("utf-8"))
-        file_text = stringio.read()
+        st.session_state['text_area'] = stringio.read()
 
     sample = "(10 + 5.5) / 2 - 0.25"
 
-    if st.session_state['upload'] is None:
-        text_area = st.text_area("Expressão matemática:", value=sample, height=180)
-    else:
-        text_area = st.text_area("Expressão matemática:", value=file_text, height=180)
+    if st.session_state['text_area'] is None:
+        st.session_state['text_area'] = sample
+
+    text_area = st.text_area("Expressão matemática:", value=st.session_state['text_area'], height="content")
 
     col1, col2, col3, col4, col5 = st.columns([1,1,1,1,1])
 
@@ -119,7 +117,7 @@ with tab1:
                 st.error("Erros encontrados:")
                 st.dataframe(pd.DataFrame(erros))
 
-            df_pandas = pd.DataFrame(
+            df = pd.DataFrame(
                 [
                     {
                         "Token": token.type.name,
@@ -132,7 +130,7 @@ with tab1:
                     for token in tokens 
                 ]
             )
-            st.session_state['df'] = df_pandas
+            st.session_state['df'] = df
             st.session_state['has_errors'] = lexer.has_errors # Podemos usar isso para mostrar uma mensagem de aviso se houver erros léxicos, mas ainda assim mostrar os tokens encontrados.
         except LexerError as error:
             st.error(str(error))
@@ -150,34 +148,32 @@ with tab1:
         download_button = st.download_button(label="Baixar CSV", data=csv, file_name="data.csv", icon=":material/download:", disabled=False)    
 
 with tab2:
-    if 'df' not in st.session_state:
-        st.session_state['df'] = pd.DataFrame()
-
-    if 'upload' not in st.session_state:
-        st.session_state['upload'] = None
-
-    st.markdown("<h2 style='text-align: center;'>Analisador Sintático</h2>", unsafe_allow_html=True)
-
-    file_uploader = st.file_uploader(key=2, label="Carregar código", type=['txt'], max_upload_size=1, accept_multiple_files=False, width="stretch")
-    file_text = None
-
-    if file_uploader:
-        st.session_state['upload'] = file_uploader
-        stringio = StringIO(file_uploader.getvalue().decode("utf-8"))
-        file_text = stringio.read()
-
     sample2 = """program exemplo;
 var x, y: int;
 begin
-  x := 10;
-  y := 20;
-  write(x + y)
+x := 10;
+y := 20;
+write(x + y)
 end."""
 
-    if st.session_state['upload'] is None:
-        text_area2 = st.text_area("Código LALG:", value=sample2, height=250, key="text_area2")
-    else:
-        text_area2 = st.text_area("Código LALG:", value=file_text, height=250, key="text_area2")
+    if 'df2' not in st.session_state:
+        st.session_state['df2'] = pd.DataFrame()
+
+    if 'text_area2' not in st.session_state:
+        st.session_state['text_area2'] = None
+
+    st.markdown("<h2 style='text-align: center;'>Analisador Sintático</h2>", unsafe_allow_html=True)
+
+    file_uploader2 = st.file_uploader(key="file_uploader2", label="Carregar código", type=['txt'], max_upload_size=1, accept_multiple_files=False, width="stretch")
+
+    if file_uploader2:
+        stringio2 = StringIO(file_uploader2.getvalue().decode("utf-8"))
+        st.session_state['text_area2'] = stringio2.read()
+
+    if st.session_state['text_area2'] is None:
+        st.session_state['text_area2'] = sample2
+    
+    text_area2 = st.text_area("Código LALG:", value=st.session_state['text_area2'], height="content", key="text_area2")
 
     col1, col2, col3, col4, col5 = st.columns([1,1,1,1,1])
 
