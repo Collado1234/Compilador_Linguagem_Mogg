@@ -210,9 +210,9 @@ end."""
             else:
                 # Análise Sintática (só roda se não houver erros léxicos)
                 parser = Parser(tokens)
-                erros_sintaticos = parser.parse()
-                st.session_state['parser_errors'] = erros_sintaticos
-                st.session_state['has_errors2'] = len(erros_sintaticos) > 1 or "sucesso" not in erros_sintaticos[0].lower()
+                syntactic_errors = parser.parse()
+                st.session_state['parser_errors'] = syntactic_errors
+                st.session_state['has_errors2'] = len(syntactic_errors) > 1 or "sucesso" not in syntactic_errors[0].lower()
 
         except LexerError as error:
             st.error(str(error))
