@@ -1,3 +1,8 @@
+# Compilador
+
+Compilador de Pascal Simplificado (LALG), com funcionalidades de análise léxica, análise sintática e análise semântica.
+Recursos como visualização de tabelas, alertas de erro, importação de arquivos `.txt` e exportação de arquivos `.csv` também estão implementados.
+
 ## Como rodar o projeto
 
 1. Clone o repositório:
