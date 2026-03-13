@@ -2,8 +2,8 @@ from io import StringIO
 import streamlit as st
 import pandas as pd
 
-from compiler.errors import LexerError
-from compiler.lexer import Lexer
+from compiler.core.errors import LexerError
+from compiler.lexer.lexer import Lexer
 from compiler.parser import Parser
 
 st.markdown("<h1 style='text-align: center;'>Compilador</h1>", unsafe_allow_html=True)
