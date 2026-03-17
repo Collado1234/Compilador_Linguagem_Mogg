@@ -14,7 +14,7 @@ Recursos como visualização de tabelas, alertas de erro, importação de arquiv
 3. Ative o ambiente virtual:
 
     Windows:
-```source venv\Scripts\activate```
+```source venv/Scripts/activate```
 
     Linux/macOS:
 ```source venv/bin/activate```
