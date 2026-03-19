@@ -96,7 +96,7 @@ with tab1:
         st.session_state['text_area'] = "(10 + 5.5) / 2 - 0.25"
 
     # Upload de arquivo
-    file = st.file_uploader("Carregar expressão matemática", type=['txt'])
+    file = st.file_uploader("Carregar código LALG", type=['txt'])
 
     if file:
         st.session_state['text_area'] = load_file(file)
