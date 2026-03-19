@@ -5,3 +5,10 @@ venv/
 # pycache
 __pycache__/
 compiler/__pycache__/
+# /Virtual Environment
+venv/
+.venv/
+
+# pycache
+__pycache__/
+compiler/__pycache__/
