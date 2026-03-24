@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from compiler.token_type import TokenType
+from compiler.core.token_type import TokenType
 
 
 @dataclass(frozen=True)

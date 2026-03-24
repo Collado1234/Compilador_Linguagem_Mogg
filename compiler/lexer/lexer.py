@@ -1,6 +1,6 @@
-from compiler.errors import LexerError
-from compiler.token import Token
-from compiler.token_type import TokenType
+from compiler.core.errors import LexerError
+from compiler.core.token import Token
+from compiler.core.token_type import TokenType
 
 class Lexer:
     "Analisador léxico para a lingaugem LALG"
