@@ -23,4 +23,4 @@ Recursos como visualização de tabelas, alertas de erro, importação de arquiv
 ```pip install -r requirements.txt```
 
 5. Execute o projeto:
-```streamlit run app.py```
+```streamlit run ui/app.py```
