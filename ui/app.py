@@ -93,7 +93,13 @@ with tab1:
         st.session_state['df'] = pd.DataFrame()
 
     if 'text_area' not in st.session_state:
-        st.session_state['text_area'] = "(10 + 5.5) / 2 - 0.25"
+        st.session_state['text_area'] = """program exemplo;
+var x, y: int;
+begin
+x := 10;
+y := 20;
+write(x + y)
+end."""
 
     # Upload de arquivo
     file = st.file_uploader("Carregar código LALG", type=['txt'])
@@ -102,7 +108,7 @@ with tab1:
         st.session_state['text_area'] = load_file(file)
 
     # Entrada manual
-    text = st.text_area("Expressão matemática:", value=st.session_state['text_area'])
+    text = st.text_area("Código LALG:", value=st.session_state['text_area'])
 
     # Botão centralizado
     _, _, col, _, _ = st.columns(5)
