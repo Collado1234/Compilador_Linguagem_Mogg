@@ -1,8 +1,8 @@
-from compiler.core.errors import LexerError
+from compiler.core.errors import ScannerError
 from compiler.core.token import Token
 from compiler.core.token_type import TokenType
 
-class Lexer:
+class Scanner:
     "Analisador léxico para a lingaugem LALG"
 
     RESERVED_WORDS = {
@@ -175,12 +175,12 @@ class Lexer:
             char.append(self._current_char)
             self._advance()
 
-        lexema = "".join(char)
+        lexeme = "".join(char)
         end_column = self.column - 1 # O token termina na coluna anterior à posição atual
         # Consulta a tabela de palavras reservadas (case-insensitive)
-        token_type = self.RESERVED_WORDS.get(lexema.lower(), TokenType.IDENTIFIER)
+        token_type = self.RESERVED_WORDS.get(lexeme.lower(), TokenType.IDENTIFIER)
 
-        return Token(token_type, lexema, start_line, start_column, end_column)
+        return Token(token_type, lexeme, start_line, start_column, end_column)
 
 
     def _generate_number(self) -> Token:

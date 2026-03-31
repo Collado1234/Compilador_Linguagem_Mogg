@@ -29,7 +29,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from compiler.core.errors import ScannerError
 from services.lexical_services import analyze_lexical
-from compiler.parser import Parser
+from compiler.analysis.parser import Parser
 
 
 # =========================
@@ -133,7 +133,7 @@ end."""
             st.session_state['df'] = df
             st.session_state['has_errors'] = result["has_errors"]
 
-        except LexerError as e:
+        except ScannerError as e:
             st.error(str(e))
 
     # Exibição dos resultados
@@ -211,7 +211,7 @@ end."""
                 parser = Parser(tokens)
                 st.session_state['parser_errors'] = parser.parse()
 
-        except LexerError as e:
+        except ScannerError as e:
             st.error(str(e))
 
     # Exibição dos resultados
