@@ -27,7 +27,7 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from compiler.core.errors import LexerError
+from compiler.core.errors import ScannerError
 from services.lexical_services import analyze_lexical
 from compiler.parser import Parser
 

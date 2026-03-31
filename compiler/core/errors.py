@@ -1,4 +1,4 @@
-class LexerError(Exception):
+class ScannerError(Exception):
     """Erro léxico com posição na entrada."""
 
     def __init__(self, message: str, line: int, column: int):
