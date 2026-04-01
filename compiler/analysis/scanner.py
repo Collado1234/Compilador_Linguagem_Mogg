@@ -155,7 +155,7 @@ class Scanner:
         lexeme = "".join(char)
         end_column = self.column - 1 # O token termina na coluna anterior à posição atual
         # Consulta a tabela de palavras reservadas (case-insensitive)
-        token_type = self.symbol_table.get(lexeme.lower(), TokenType.IDENTIFIER)
+        token_type = self.symbol_table.get_reserved_words(lexeme.lower(), TokenType.IDENTIFIER)
 
         return Token(token_type, lexeme, start_line, start_column, end_column)
 

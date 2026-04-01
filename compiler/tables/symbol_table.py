@@ -34,11 +34,9 @@ class Symbol_Table:
         
         self.tokens[lexeme] = token
         
-    def get(self, lexeme: str, default=None):
-        if lexeme in self.tokens:
-            return self.tokens[lexeme]
-
-        return self.reserved_words.get(lexeme, default)
+    def get_reserved_words(self, lexeme: str, default=None):
+        lexeme = lexeme.lower()
+        return self.reserved_words.get(lexeme, self.tokens.get(lexeme, default))
 
     def exists(self, lexeme: str):
         return lexeme in self.tokens
