@@ -102,13 +102,13 @@ write(x + y)
 end."""
 
     # Upload de arquivo
-    file = st.file_uploader("Carregar código LALG", type=['txt'])
+    file = st.file_uploader("Carregar código LALG", type=['txt'], max_upload_size=1)
 
     if file:
         st.session_state['text_area'] = load_file(file)
 
     # Entrada manual
-    text = st.text_area("Código LALG:", value=st.session_state['text_area'])
+    text = st.text_area("Código LALG:", value=st.session_state['text_area'], key=1)
 
     # Botão centralizado
     _, _, col, _, _ = st.columns(5)
@@ -177,7 +177,7 @@ end."""
         st.session_state['text_area2'] = sample
 
     # Upload de arquivo
-    file = st.file_uploader("Carregar código", type=['txt'], key="file2")
+    file = st.file_uploader("Carregar código", type=['txt'], max_upload_size=1)
 
     if file:
         st.session_state['text_area2'] = load_file(file)

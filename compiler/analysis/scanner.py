@@ -1,34 +1,10 @@
 from compiler.core.errors import ScannerError
 from compiler.core.token import Token
 from compiler.core.token_type import TokenType
+from compiler.tables.symbol_table import Symbol_Table
 
 class Scanner:
     "Analisador léxico para a lingaugem LALG"
-
-    RESERVED_WORDS = {
-        "program": TokenType.KW_PROGRAM,
-        "var": TokenType.KW_VAR,
-        "int": TokenType.KW_INT,
-        "boolean": TokenType.KW_BOOLEAN,
-        "procedure": TokenType.KW_PROCEDURE,
-        "begin": TokenType.KW_BEGIN,
-        "end": TokenType.KW_END,
-        "if": TokenType.KW_IF,
-        "then": TokenType.KW_THEN,
-        "else": TokenType.KW_ELSE,
-        "while": TokenType.KW_WHILE,
-        "do": TokenType.KW_DO,
-        "for": TokenType.KW_FOR,
-        "to": TokenType.KW_TO,
-        "not": TokenType.KW_NOT,
-        "or": TokenType.KW_OR,
-        "and": TokenType.KW_AND,
-        "read": TokenType.KW_READ,
-        "write": TokenType.KW_WRITE,
-        "true": TokenType.KW_TRUE,
-        "false": TokenType.KW_FALSE,
-        "return": TokenType.KW_RETURN,
-    }
 
     SINGLE_CHAR_TOKENS = {
         "+": TokenType.OP_ADD,
@@ -48,6 +24,7 @@ class Scanner:
         self.column = 1
         self.has_errors = False
         self.errors = []  # Lista para registrar erros
+        self.symbol_table: Symbol_Table = Symbol_Table()
     
     def generate_tokens(self):
         tokens: list[Token] = []
@@ -178,7 +155,7 @@ class Scanner:
         lexeme = "".join(char)
         end_column = self.column - 1 # O token termina na coluna anterior à posição atual
         # Consulta a tabela de palavras reservadas (case-insensitive)
-        token_type = self.RESERVED_WORDS.get(lexeme.lower(), TokenType.IDENTIFIER)
+        token_type = self.symbol_table.get(lexeme.lower(), TokenType.IDENTIFIER)
 
         return Token(token_type, lexeme, start_line, start_column, end_column)
 
@@ -230,7 +207,7 @@ class Scanner:
             "coluna": start_column,
             "mensagem": "Comentário de bloco não fechado"
         })
-        # Remove o raise LexerError(...)
+        # Remove o raise ScannerError(...)
 
     def _skip_line_comment(self) -> None: #Pula comentário de linha
         while self._current_char is not None and self._current_char != "\n":
