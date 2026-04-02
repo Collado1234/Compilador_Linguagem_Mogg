@@ -10,7 +10,7 @@ class Parser:
         self.tokens = tokens
         self.position = 0
         self.errors: list[str] = []
-
+    
     # ── Propriedades e métodos auxiliares ──────────────────────────
 
     @property

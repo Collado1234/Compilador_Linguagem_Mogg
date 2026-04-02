@@ -29,7 +29,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from compiler.core.errors import ScannerError
 from services.lexical_services import analyze_lexical
-from compiler.parser import Parser
+from compiler.analysis.parser import Parser
 
 
 # =========================
@@ -102,13 +102,13 @@ write(x + y)
 end."""
 
     # Upload de arquivo
-    file = st.file_uploader("Carregar código LALG", type=['txt'])
+    file = st.file_uploader("Carregar código LALG", type=['txt'], max_upload_size=1)
 
     if file:
         st.session_state['text_area'] = load_file(file)
 
     # Entrada manual
-    text = st.text_area("Código LALG:", value=st.session_state['text_area'])
+    text = st.text_area("Código LALG:", value=st.session_state['text_area'], key=1)
 
     # Botão centralizado
     _, _, col, _, _ = st.columns(5)
@@ -133,7 +133,7 @@ end."""
             st.session_state['df'] = df
             st.session_state['has_errors'] = result["has_errors"]
 
-        except LexerError as e:
+        except ScannerError as e:
             st.error(str(e))
 
     # Exibição dos resultados
@@ -177,7 +177,7 @@ end."""
         st.session_state['text_area2'] = sample
 
     # Upload de arquivo
-    file = st.file_uploader("Carregar código", type=['txt'], key="file2")
+    file = st.file_uploader("Carregar código", type=['txt'], max_upload_size=1)
 
     if file:
         st.session_state['text_area2'] = load_file(file)
@@ -211,7 +211,7 @@ end."""
                 parser = Parser(tokens)
                 st.session_state['parser_errors'] = parser.parse()
 
-        except LexerError as e:
+        except ScannerError as e:
             st.error(str(e))
 
     # Exibição dos resultados
